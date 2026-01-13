@@ -1,10 +1,10 @@
 # 🎙️ YapCap - The Audio Buffer Recorder
 
-Ever wished you could save audio *after* something interesting already happened?
+Ever wished you could save funny conversations *after* something interesting already happened?
 This little Python tool has your back 😄
 
-It continuously records audio into a rolling **3-minute buffer**.
-When you press **Enter**, the last 3 minutes are instantly saved as a `.wav` file.
+It continuously records audio (*captures your yapping*) into a rolling **3-minute buffer**.
+When you press **Enter ⏎**, the last 3 minutes are instantly saved as a `.wav` file.
 Recording then continues like nothing happened.
 
 Perfect for “wait, I should’ve recorded that” moments ✨
@@ -13,7 +13,7 @@ Perfect for “wait, I should’ve recorded that” moments ✨
 
 * 🎧 Continuous audio recording
 * ⏱️ Rolling buffer of the last **3 minutes**
-* ⌨️ Press **Enter** to save the buffer to a `.wav` file
+* ⌨️ Press **Enter ⏎** to save the buffer to a `.wav` file
 * 📂 Clips are stored in a directory you choose
 * 🔁 Keeps recording after each save
 
