@@ -222,10 +222,11 @@ wheels = [
 
 [[package]]
 name = "yapcap"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "numpy" },
+    { name = "rich" },
     { name = "sounddevice" },
     { name = "typer" },
 ]
@@ -233,6 +234,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "numpy", specifier = ">=2.3.3" },
+    { name = "rich", specifier = ">=14.2.0" },
     { name = "sounddevice", specifier = ">=0.5.2" },
     { name = "typer", specifier = ">=0.21.1" },
 ]

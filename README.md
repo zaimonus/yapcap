@@ -9,6 +9,11 @@ Recording then continues like nothing happened.
 
 Perfect for “wait, I should’ve recorded that” moments ✨
 
+> [!WARNING]
+> This tool is intended for use only with the consent of all participants.
+> Recording people without their knowledge or consent may be illegal or unethical.
+> So please make sure everyone involved has agreed to be recorded.
+
 ## ✨ Features
 
 * 🎧 Continuous audio recording

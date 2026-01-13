@@ -6,11 +6,14 @@ from pathlib import Path
 import numpy as np
 import sounddevice as sd
 import typer
+from rich.console import Console
 
 # Parameters
 DEFAULT_SAMPLERATE = 44100  # 44.1 kHz for quality
 DEFAULT_SECONDS = 180  # 3 minutes
 CHANNELS = 1  # Mono = 1, Stereo = 2
+
+console = Console()
 
 
 def start_recording(output_dir: Path, seconds: int, samplerate: int):
@@ -19,12 +22,25 @@ def start_recording(output_dir: Path, seconds: int, samplerate: int):
 
     def callback(indata, frames, time, status):
         if status:
-            print(status)  # Warnings on overruns/underruns
+            console.print(status)  # Warnings on overruns/underruns
         buffer.extend(indata.flatten())
 
     # start audio-stream
     with sd.InputStream(channels=CHANNELS, samplerate=samplerate, callback=callback):
-        print("Start recording...")
+        console.rule("WARNING")
+        console.print(
+            "\n".join(
+                [
+                    "This tool is intended for use only with the consent of all participants.",
+                    "Recording people without their knowledge or consent may be illegal or unethical.",
+                    "So please make sure everyone involved has agreed to be recorded.",
+                ]
+            ),
+            justify="center",
+        )
+        console.rule()
+
+        console.log("Start recording...")
         running = True
         while running:
             try:
@@ -46,7 +62,7 @@ def start_recording(output_dir: Path, seconds: int, samplerate: int):
                     f.setsampwidth(2)  # 16-bit
                     f.setframerate(samplerate)
                     f.writeframes((data * 32767).astype(np.int16).tobytes())
-                print(f"Clip saved under {filename}")
+                console.log(f"Clip saved under {filename}")
 
 
 app = typer.Typer()
