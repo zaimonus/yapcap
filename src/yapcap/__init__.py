@@ -7,6 +7,7 @@ import numpy as np
 import sounddevice as sd
 import typer
 from rich.console import Console
+from rich.text import Text
 
 # Parameters
 DEFAULT_SAMPLERATE = 44100  # 44.1 kHz for quality
@@ -16,18 +17,25 @@ CHANNELS = 1  # Mono = 1, Stereo = 2
 console = Console()
 
 
+def log(*objects: Text, end: str = "\n"):
+    time = datetime.now().strftime("[%X]")
+    display_time = Text(time, style="blue")
+    console.print(display_time, end=" ")
+    console.print(*objects, end=end)
+
+
 def start_recording(output_dir: Path, seconds: int, samplerate: int):
     # Ringbuffer for PCM Samples
     buffer = deque(maxlen=samplerate * seconds * CHANNELS)
 
     def callback(indata, frames, time, status):
         if status:
-            console.print(status)  # Warnings on overruns/underruns
+            log(Text(str(status)))  # Warnings on overruns/underruns
         buffer.extend(indata.flatten())
 
     # start audio-stream
     with sd.InputStream(channels=CHANNELS, samplerate=samplerate, callback=callback):
-        console.rule("WARNING")
+        console.rule("[red]WARNING[/]", style="red")
         console.print(
             "\n".join(
                 [
@@ -38,16 +46,31 @@ def start_recording(output_dir: Path, seconds: int, samplerate: int):
             ),
             justify="center",
         )
-        console.rule()
+        console.rule(style="red")
 
-        console.log("Start recording...")
+        log(Text("Start recording ..."))
+
         running = True
         while running:
             try:
-                inp = input("Press ENTER to save, CTRL+C to exit...")
+                log(
+                    Text("Press"),
+                    Text("ENTER", "purple"),
+                    Text("to save clip ..."),
+                )
+                log(
+                    Text("Press"),
+                    Text("CTRL+C", "purple"),
+                    Text("or"),
+                    Text("CTRL+D", "purple"),
+                    Text("to exit ..."),
+                    end="",
+                )
+                inp = console.input()
             except KeyboardInterrupt:
-                inp = "\n"
                 running = False
+                continue
+
             if inp == "":
                 # copy data to not block the buffer
                 data = np.array(buffer, dtype=np.float32)
@@ -62,7 +85,8 @@ def start_recording(output_dir: Path, seconds: int, samplerate: int):
                     f.setsampwidth(2)  # 16-bit
                     f.setframerate(samplerate)
                     f.writeframes((data * 32767).astype(np.int16).tobytes())
-                console.log(f"Clip saved under {filename}")
+
+                log(Text("Clip saved under"), Text(str(filename), "bold yellow"))
 
 
 app = typer.Typer()
